@@ -9,7 +9,7 @@ export function Teams() {
   useEffect(() => {
     const loadTeams = async () => {
       setLoading(true);
-      const data = await fetchFromApi('/api/teams');
+      const data = await fetchFromApi('-8000.app.github.dev/api/teams');
       setTeams(data);
       setLoading(false);
     };

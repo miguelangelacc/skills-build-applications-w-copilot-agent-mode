@@ -9,7 +9,7 @@ export function Workouts() {
   useEffect(() => {
     const loadWorkouts = async () => {
       setLoading(true);
-      const data = await fetchFromApi('/api/workouts');
+      const data = await fetchFromApi('-8000.app.github.dev/api/workouts');
       setWorkouts(data);
       setLoading(false);
     };

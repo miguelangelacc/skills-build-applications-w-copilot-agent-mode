@@ -18,11 +18,11 @@ export const getApiBaseUrl = () => {
   
   // Use Codespaces URL if available
   if (codespaceName) {
-    return `https://${codespaceName}-8000.app.github.dev`;
+    return `https://${codespaceName}`;
   }
   
   // Fallback to localhost for local development
-  return 'http://localhost:8000/api';
+  return 'http://localhost:8000';
 };
 
 /**

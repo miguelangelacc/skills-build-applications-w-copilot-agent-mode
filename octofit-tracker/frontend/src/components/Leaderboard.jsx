@@ -10,7 +10,7 @@ export function Leaderboard() {
   useEffect(() => {
     const loadLeaderboard = async () => {
       setLoading(true);
-      const data = await fetchFromApi('/api/leaderboard');
+      const data = await fetchFromApi('-8000.app.github.dev/api/leaderboard');
       setLeaderboardData(data);
       setLoading(false);
     };
