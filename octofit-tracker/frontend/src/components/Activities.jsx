@@ -9,7 +9,7 @@ export function Activities() {
   useEffect(() => {
     const loadActivities = async () => {
       setLoading(true);
-      const data = await fetchFromApi('/activities');
+      const data = await fetchFromApi('/api/activities');
       setActivities(data);
       setLoading(false);
     };

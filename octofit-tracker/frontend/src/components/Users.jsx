@@ -9,7 +9,7 @@ export function Users() {
   useEffect(() => {
     const loadUsers = async () => {
       setLoading(true);
-      const data = await fetchFromApi('/users');
+      const data = await fetchFromApi('/api/users');
       setUsers(data);
       setLoading(false);
     };
