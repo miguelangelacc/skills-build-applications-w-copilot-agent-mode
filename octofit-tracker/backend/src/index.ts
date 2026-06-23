@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDatabase, mongodbUri } from './config/database';
+import { getApiUrl, serverConfig } from './server';
 import usersRouter from './routes/users';
 import teamsRouter from './routes/teams';
 import activitiesRouter from './routes/activities';
@@ -11,20 +12,7 @@ import workoutsRouter from './routes/workouts';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8000;
-
-// Codespaces-aware API URL
-const getApiUrl = (): string => {
-  const codespaceName = process.env.CODESPACE_NAME;
-  const githubServer = process.env.GITHUB_SERVER_URL || 'github.com';
-  
-  if (codespaceName) {
-    return `https://${codespaceName}-8000.${githubServer.replace('https://', '').replace('http://', '')}`;
-  }
-  
-  return `http://localhost:${PORT}`;
-};
-
+const PORT = serverConfig.port;
 const API_URL = getApiUrl();
 
 // Middleware
@@ -34,7 +22,7 @@ app.use(express.json());
 // MongoDB Connection
 connectDatabase().catch((err) => {
   console.error('Failed to connect to MongoDB:', err);
-  process.exit(1);
+  console.warn('⚠️  Continuing without database connection - API will respond but data routes will fail\n');
 });
 
 // Health Check Route
@@ -43,7 +31,9 @@ app.get('/api/health', (req, res) => {
     status: 'Backend is running',
     timestamp: new Date(),
     apiUrl: API_URL,
-    environment: process.env.NODE_ENV || 'development',
+    isCodespace: serverConfig.isCodespace,
+    codespaceName: serverConfig.codespaceName,
+    environment: serverConfig.environment,
   });
 });
 
@@ -64,6 +54,13 @@ app.use((req, res) => {
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Backend server running on ${API_URL}`);
-  console.log(`MongoDB URI: ${mongodbUri}`);
+  console.log(`\n✅ Backend server running on ${API_URL}`);
+  console.log(`📍 Environment: ${serverConfig.environment}`);
+  console.log(`🔗 API Base URL: ${API_URL}`);
+  if (serverConfig.isCodespace) {
+    console.log(`🌐 Codespace: ${serverConfig.codespaceName}`);
+  } else {
+    console.log(`💻 Running locally on http://localhost:${PORT}`);
+  }
+  console.log(`🗄️  MongoDB: ${mongodbUri}\n`);
 });
